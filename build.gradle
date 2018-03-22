@@ -53,7 +53,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-web-services')
 	compile('org.springframework.boot:spring-boot-starter-websocket')
-	compile('org.springframework.session:spring-session-jdbc')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')

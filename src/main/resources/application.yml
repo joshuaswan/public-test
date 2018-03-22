@@ -6,3 +6,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  mvc:
+    static-path-pattern: /static/**

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试用例图片</title>
+</head>
+<body>
+<img id="img-id" alt="对应测试用例截图不存在">
+</body>
+<script>
+    var pathName = window.document.location.pathname;
+    var url = location.search;
+    document.getElementById("img-id").setAttribute("src",
+            encodeURI(pathName.substring(0, pathName.substr(1).indexOf('/') + 1)
+                    + "/" +  "api/test-case/result-photograph/"+url.substr(1,url.length)));
+</script>
+</html>

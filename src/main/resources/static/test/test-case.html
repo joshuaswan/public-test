@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html ng-app="testCaseApp">
+<head>
+    <meta charset="UTF-8">
+    <title>测试用例管理系统</title>
+    <link rel="stylesheet" href="../styles/common/jquery-ui.css">
+    <link rel="stylesheet" href="../styles/common/heren-v1.css">
+    <link rel="stylesheet" href="../styles/common/heren-datepicker.css">
+    <link rel="stylesheet" href="../styles/common/heren-select2.css">
+    <link rel="stylesheet" href="../styles/common/zTreeStyle.css">
+    <link rel="stylesheet" href="../styles/common/ng-grid.css">
+    <link rel="stylesheet" href="../styles/angular-tree.css">
+    <link rel="stylesheet" href="../styles/common/heren-component.css">
+    <link rel="stylesheet" href="../styles/test-case.css">
+</head>
+<body ng-controller="testCaseController" class="test-case">
+
+<header>
+    <div class="foundation-gridTitle hc-title-area no-border-top-left-right margin-bottom5">测试用例管理系统</div>
+</header>
+<div class="main-content margin5">
+    <section class="main-left">
+        <div class="foundation-gridTitle hc-title-area no-border-top-left-right">测试用例分类</div>
+        <div class="hc-operate-area">
+            <a ng-click="openNodeHierarchyModel(true)"><i id="node-add" class="icon-plus-2"></i>新增</a>
+            <a ng-class="{'i-disable':isSelected()}" ng-click="openNodeHierarchyModel(false)"><i id="node-edit"
+                                                                                                 class="icon-pencil"></i>编辑</a>
+            <a ng-class="{'i-disable':isSelected()}" ng-click="removeNodeHierarchy()"><i id="node-remove"
+                                                                                         class="icon-minus-2"></i>删除</a>
+            <a ng-click="refreshNodeHierarchy()"><i id="node-refresh" class="fa-refresh"></i>刷新</a>
+        </div>
+        <div class="tree-out">
+            <treecontrol tree-model="treedata" filter-expression="expression" class="tree-light"
+                         filter-comparator="comparator" order-by="object.orderId"
+                         selected-node="selectedNode" options="opts" on-selection="selectedItem(node)"
+                         double-click-node="dbClickForAdd(node)">
+                <span title="{{node.object.name}}" ng-bind="node.object.name"></span>
+            </treecontrol>
+        </div>
+    </section>
+    <section class="main-right margin-left5">
+        <div class="foundation-grid">
+            <div class="hc-title-area border-line-top">测试用例列表</div>
+            <div class="table-grid">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="one-th">ID</th>
+                        <th class="two-th">测试目的</th>
+                        <th class="three-th">预期结果</th>
+                        <th class="four-th">测试步骤</th>
+                        <th class="five-th">
+                            测试结果
+                            <div class="run-success" hr-popover="runSuccessOpt" ng-click="filterRunStatus(1)"></div>
+                            <div class="run-fail" hr-popover="runFailOpt" ng-click="filterRunStatus(0)"></div>
+                            <div class="no-run" hr-popover="notRunOpt" ng-click="filterRunStatus()"></div>
+                        </th>
+                        <th class="six-th">脚本地址</th>
+                        <th class="seven-th">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+                <div class="table-body table-height">
+                    <table class="table table-bordered table-striped">
+                        <tbody class="">
+                        <tr ng-repeat="testcase in testCaseList track by $index" ng-show="showTestCase($index)">
+                            <td class="one-td" ng-bind="$index+1"></td>
+                            <td class="two-td" ng-bind="testcase.summary"></td>
+                            <td class="three-td" ng-bind="testcase.preconditions"></td>
+                            <td class="four-td">
+                                <div ng-repeat="step in testcase.testCaseStepsList">
+                                    <span ng-bind="step.testCaseStepsPk.stepNumber">:</span>
+                                    <span ng-bind="step.actions"></span>
+                                    <i class="icon-arrow-right"></i>
+                                    <span ng-bind="step.expectedResults"></span>
+                                </div>
+                            </td>
+                            <td class="five-td">
+                                <a href="{{photographUriHtml}}{{testcase.testCaseId}}" target="_blank">
+                                    <div ng-class="runStatus($index)"></div>
+                                </a>
+                                {{testcase.result}}
+                            </td>
+                            <td class="six-td" ng-bind="testcase.codePath"></td>
+                            <td class="seven-td">
+                                <a ng-click="editTestCaseModal($index)"><i class="icon-pencil"></i></a>
+                                <a ng-click="removeTestCase($index)"><i class="icon-minus-2"></i></a>
+                                <a ng-click="runTestCase($index)" ng-class="{'i-disable':isRunEnable($index)}"><i
+                                        class="fa-refresh"></i></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<footer class="content-footer">
+    <div class="btn-center">
+        <button class="btn btn-primary" ng-click="addTestCaseModal()" ng-disabled="isSelected()">新增(<span
+                class="text-underline">N</span>)
+        </button>
+        <button class="btn btn-primary" ng-click="runTestCaseList()">执行(<span class="text-underline">R</span>)</button>
+        <button class="btn btn-primary" ng-click="clearTestResult()" ng-disabled="isSelected()">清空测试结果(<span
+                class="text-underline">C</span>)
+        </button>
+    </div>
+</footer>
+
+<div hr-draggable modal="nodeModal" close="closeNodeModalCallback()" options="nodeModalOpts">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="closeNodeModal()">&times;</button>
+        <h5>{{modalOption.head}}</h5>
+    </div>
+    <div class="modal-body form-horizontal padding5">
+        <div class="control-group">
+            <label class="control-label modal-label">
+                上层节点：
+            </label>
+            <div class="controls">
+                <span ng-bind="nodesHierarchy.parentId | nodeName" class="sp-medium span-input">
+                </span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label modal-label">
+                分组名称：
+            </label>
+            <div class="controls">
+                <input type="text" ng-model="nodesHierarchy.name" ng-change="updatePy()" class="input-medium">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label modal-label">
+                分组输入码：
+            </label>
+            <div class="controls">
+                <input type="text" class="input-medium" ng-model="nodesHierarchy.inputCode">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">
+                节点描述：
+            </label>
+            <div class="controls">
+                <textarea ng-model="nodesHierarchy.details" class="node-details"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="saveNodesHierarchy()">保存</button>
+        <button class="btn btn-primary" ng-click="closeNodeModal()">关闭</button>
+    </div>
+</div>
+
+<div hr-draggable modal="testCaseModal" close="closeTestCaseModalCallback()" option="testCaseModalOpts">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="closeTestCaseModal()">&times;</button>
+        <h5>测试用例</h5>
+    </div>
+    <div class="modal-body">
+        <div class="model-top">
+            <span class="modal-left">
+                <label class="text-label">
+                    测试目的:
+                </label>
+                <textarea rows="5" class="modal-textarea" ng-model="testCase.summary"></textarea>
+            </span>
+            <span class="modal-middle">
+                <label class="text-label">
+                    预期结果:
+                </label>
+                <textarea rows="5" class="modal-textarea" ng-model="testCase.preconditions"></textarea>
+            </span>
+            <span class="modal-right">
+                <label class="text-label">
+                    测试结果:
+                </label>
+                <textarea rows="5" class="modal-textarea" ng-model="testCase.result"></textarea>
+            </span>
+        </div>
+        <div class="modal-active form-horizontal">
+            <div class="control-group ">
+                <label class="control-label long-label">
+                    该测试用例是否为自动化测试：
+                </label>
+                <div class="controls" style="padding: 2px;margin-left: 242px">
+                    <label class="radio inline">
+                        <input type="radio" name="active" value="2" ng-model="testCase.executionType"
+                               ng-change="emptyCodePath()">是
+                    </label>
+                    <label class="radio inline">
+                        <input type="radio" name="active" value="1" ng-model="testCase.executionType"
+                               ng-change="emptyCodePath()">否
+                    </label>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">脚本地址:</label>
+                <div class="controls">
+                    <select ui-select2="selectTwoOpts" ng-model="selectPackage" style="width: 150px"
+                            ng-disabled="isNotActive()">
+                        <option value=""></option>
+                        <option ng-repeat="package in packageNameList" value="{{package}}" code="{{package}}">
+                            {{package}}
+                        </option>
+                    </select>
+                    <select ui-select2="selectTwoOpts" ng-model="selectClass" style="width: 150px"
+                            ng-disabled="isNotActive()">
+                        <option value=""></option>
+                        <option value="{{class}}" ng-repeat="class in classNameList" code="{{class}}">
+                            {{class}}
+                        </option>
+                    </select>
+                    <select ui-select2="selectTwoOpts" ng-model="selectMethod" style="width: 150px"
+                            ng-disabled="isNotActive()">
+                        <option value=""></option>
+                        <option value="{{method}}" ng-repeat="method in methodNameList" code="{{method}}">
+                            {{method}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">是否保存截图:</label>
+                <div class="controls">
+                    <label class="radio inline">
+                        <input type="radio" value="1" ng-model="testCase.savePhoto">
+                        是
+                    </label>
+                    <label class="radio inline">
+                        <input type="radio" value="0" ng-model="testCase.savePhoto">
+                        否
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-bottom">
+            <div class="hc-title-area border-line-top-left-right padding5">测试步骤</div>
+            <div class="hc-operate-area border-line-left-right">
+                <a class="special-type-accord-app" ng-click="addTestCaseStep()"><i class="icon-plus-2"></i>新增</a>
+                <a class="special-type-accord-app" ng-click="removeTestCaseStep()"><i class="icon-minus-2"></i>删除</a>
+            </div>
+            <div class="gridStyle test-case-step" ng-grid="testCaseStepGridOptions"></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" style="float:left" ng-click="copyTestCase()">复制</button>
+        <button class="btn btn-primary" ng-click="saveTestCase()">保存</button>
+        <button class="btn btn-primary" ng-click="closeTestCaseModal()">关闭</button>
+    </div>
+</div>
+
+<script src="../javascripts/libs/jquery.js"></script>
+<script src="../javascripts/libs/select2.js"></script>
+<script src="../javascripts/libs/select2_locale_zh-CN.js"></script>
+<script src="../javascripts/libs/bootstrap.js"></script>
+<script src="../javascripts/libs/jquery-ui.js"></script>
+<script src="../javascripts/libs/jquery-ui-timepicker-addon.js"></script>
+<script src="../javascripts/libs/jquery-ui-timepicker-zh-CN.js"></script>
+<script src="../javascripts/libs/angular.js"></script>
+<script src="../javascripts/libs/angular-ui.js"></script>
+<script src="../javascripts/libs/ui-bootstrap-tpls.js"></script>
+<script src="../javascripts/libs/ng-grid.js"></script>
+<script src="../javascripts/libs/angular-tree-control.js"></script>
+<script src="../javascripts/libs/mousetrap.js"></script>
+<script src="../javascripts/libs/mousetrap-global.js"></script>
+<script src="../javascripts/common/utils.js"></script>
+<script src="../javascripts/common/heren-ui.js"></script>
+
+<script src="../javascripts/common/hisui/indexedDB.js"></script>
+<script src="../javascripts/libs/jquery.ztree.core.js"></script>
+<script src="../javascripts/libs/html2canvas.js"></script>
+<script src="../javascripts/common/utils/msg-base.js"></script>
+
+<script src="../javascripts/common/nurse/pinyin.js"></script>
+
+<script src="../javascripts/test/test-case-app.js"></script>
+<script src="../javascripts/test/test-case-controller.js"></script>
+</body>
+</html>

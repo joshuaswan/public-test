@@ -1,0 +1,95 @@
+/*jqueryui.css部分*/
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+    -moz-border-radius-topleft: 0px /*{cornerRadius}*/;
+    -webkit-border-top-left-radius: 0px /*{cornerRadius}*/;
+    -khtml-border-top-left-radius: 0px /*{cornerRadius}*/;
+    border-top-left-radius: 0px /*{cornerRadius}*/;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    -moz-border-radius-topright: 0px /*{cornerRadius}*/;
+    -webkit-border-top-right-radius: 0px /*{cornerRadius}*/;
+    -khtml-border-top-right-radius: 0px /*{cornerRadius}*/;
+    border-top-right-radius: 0px /*{cornerRadius}*/;
+}
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-left,
+.ui-corner-bl {
+    -moz-border-radius-bottomleft: 0px /*{cornerRadius}*/;
+    -webkit-border-bottom-left-radius: 0px /*{cornerRadius}*/;
+    -khtml-border-bottom-left-radius: 0px /*{cornerRadius}*/;
+    border-bottom-left-radius: 0px /*{cornerRadius}*/;
+}
+
+.ui-corner-all,
+.ui-corner-bottom,
+.ui-corner-right,
+.ui-corner-br {
+    -moz-border-radius-bottomright: 0px /*{cornerRadius}*/;
+    -webkit-border-bottom-right-radius: 0px /*{cornerRadius}*/;
+    -khtml-border-bottom-right-radius: 0px /*{cornerRadius}*/;
+    border-bottom-right-radius: 0px /*{cornerRadius}*/;
+}
+
+.ui-datepicker {
+    width: 16em;
+}
+
+.ui-widget-header {
+    border: 1px solid #ccc /*{borderColorHeader}*/;
+    background: #ddd;
+    color: #222 /*{fcHeader}*/;
+}
+
+.ui-datepicker table {
+    width: 100%;
+    font-size: 14px;
+    /*border: 1px solid #ccc;*/
+    border-collapse: collapse;
+    margin: 0 0 .4em;
+}
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    border: 1px solid #eee;
+    background: #eee;
+    font-weight: normal /*{fwDefault}*/;
+    color: #555 /*{fcDefault}*/;
+}
+
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus {
+    border: 1px solid #6AB0DC /*{borderColorHover}*/;
+    background: #F9F9F9; /*{bgColorHover}*/
+    font-weight: normal /*{fwDefault}*/;
+    color: #6AB0DC /*{fcHover}*/;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+    border: 1px solid #ccc /*{borderColorActive}*/;
+    background: white /*{bgColorActive}*/ url(images/jquery-image/ui-bg_glass_65_ffffff_1x400.png) /*{bgImgUrlActive}*/ 50% /*{bgActiveXPos}*/ 50% /*{bgActiveYPos}*/ repeat-x /*{bgActiveRepeat}*/;
+    font-weight: normal /*{fwDefault}*/;
+    color: #212121 /*{fcActive}*/;
+}
+
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+    border: 1px solid #fcefa1;
+    background: #fbf9ee /*{bgColorHighlight}*/ url(images/jquery-image/ui-bg_glass_55_fbf9ee_1x400.png) /*{bgImgUrlHighlight}*/ 50% /*{bgHighlightXPos}*/ 50% /*{bgHighlightYPos}*/ repeat-x /*{bgHighlightRepeat}*/;
+    color: #363636 /*{fcHighlight}*/;
+}
+
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+    top: 63%;
+}
