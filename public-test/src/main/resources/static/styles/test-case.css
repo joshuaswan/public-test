@@ -1,0 +1,171 @@
+.test-case .control-group .controls .node-details {
+    height: 500%;
+    width: 200%;
+}
+
+.test-case .table-grid .one-th {
+    width: 4%;
+    border-left: none;
+}
+
+.test-case .table-grid .two-th {
+    width: 13%;
+}
+
+.test-case .table-grid .two-th {
+    width: 13%;
+}
+
+.test-case .table-grid .three-th {
+    width: 13%;
+}
+
+.test-case .table-grid .four-th {
+    width: auto;
+}
+
+.test-case .table-grid .five-th {
+    width: 13%;
+}
+
+.test-case .table-grid .six-th {
+    width: 13%;
+}
+
+.test-case .table-grid .seven-th {
+    width: 83px;
+    border-right: none;
+}
+
+.test-case .table-grid .one-td {
+    width: 4%;
+}
+
+.test-case .table-grid .two-td {
+    width: 13.1%;
+}
+
+.test-case .table-grid .two-td {
+    width: 13.1%;
+    word-break: break-all;
+}
+
+.test-case .table-grid .three-td {
+    width: 13.1%;
+    word-break: break-all;
+}
+
+.test-case .table-grid .four-td {
+    width: auto;
+    word-break: break-all;
+}
+
+.test-case .table-grid .five-td {
+    width: 13.1%;
+    word-break: break-all;
+}
+
+.test-case .table-grid .six-td {
+    width: 13.1%;
+    word-break: break-all;
+}
+
+.test-case .table-grid .seven-td {
+    width: 75px;
+    word-break: break-all;
+}
+
+.test-case .tree-out {
+    height: 674px;
+    overflow-y: auto;
+}
+
+.test-case .table-bordered {
+    border-left: none;
+    border-right: none;
+}
+
+.test-case .table-body {
+    border-left: none;
+    border-right: none;
+}
+
+.test-case .modal-body .modal-left {
+    padding: 5px;
+    width: 32%;
+    float: left;
+}
+
+.test-case .modal-body .modal-middle {
+    padding: 5px;
+    width: 32%;
+    float: left;
+}
+
+.test-case .modal-body .modal-right {
+    padding: 5px;
+    width: 32%;
+    float: left;
+}
+
+.test-case .modal-body .modal-textarea {
+    width: 100%;
+}
+
+.test-case .modal-body .long-label {
+    width: 228px
+}
+
+.test-case .modal-body .modal-bottom {
+    height: 400px;
+}
+
+.test-case .modal-body .span-input {
+    border: solid 1px lightgray;
+    font-weight: 100
+}
+
+.test-case .modal-body .readonly {
+    background-color: grey;
+}
+
+.test-case .code-path {
+    width: 500px;
+}
+
+.test-case .modal-body .modal-bottom .test-case-step {
+    height: 100%;
+}
+
+.test-case .table-height {
+    height: 688px;
+    border-bottom: none;
+}
+
+.test-case .run-success {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-image: radial-gradient(circle at center, #00ca26, #5aca00);
+}
+
+.test-case .run-fail {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-image: radial-gradient(circle at center, #ca2b43, #ca2400);
+}
+
+.test-case .no-run {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-image: radial-gradient(circle at center, #777777, #9a9a9a);
+}
+
+.test-case .select2-width{
+    width: 50px;
+}
