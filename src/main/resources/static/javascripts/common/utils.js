@@ -89,8 +89,9 @@ var Path = function () {
             if (reg.test(url)) {
                 return encodeURI(url);
             } else {
-                var pathName = window.document.location.pathname;
-                return encodeURI(pathName.substring(0, pathName.substr(1).indexOf('/') + 1) + "/" + url);
+                // var pathName = window.document.location.pathname;
+                // return encodeURI(pathName.substring(0, pathName.substr(1).indexOf('/') + 1) + "/" + url);
+                return encodeURI("/" + url);
             }
         },
         getWebstartUri: function (url) {

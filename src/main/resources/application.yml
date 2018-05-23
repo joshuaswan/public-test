@@ -6,5 +6,16 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-  mvc:
-    static-path-pattern: /static/**
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    database: mysql
+    show-sql: true
+jasypt:
+  encryptor:
+    password: joshua
+server:
+  port: 8080
+
+test:
+  config: test-config

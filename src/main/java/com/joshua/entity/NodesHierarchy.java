@@ -12,11 +12,13 @@ import java.util.Set;
  */
 
 @Entity
+@SequenceGenerator(name = "nodesHierarchy",sequenceName = "nodesHierarchy_sequence",initialValue = 1,allocationSize = 1)
 public class NodesHierarchy{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    @Column(name="id")
+    @GeneratedValue(generator="nodesHierarchy")
+    private Integer id;
 
     private String name;
 
@@ -46,11 +48,11 @@ public class NodesHierarchy{
         this.testCases = testCases;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

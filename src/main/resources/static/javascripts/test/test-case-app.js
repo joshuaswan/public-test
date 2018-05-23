@@ -13,7 +13,7 @@ angular.module("testCaseApp").value("ui.config", {
 });
 angular.module("testCaseApp").factory("nodeNameFactory", function ($http) {
     var nodeNameObj = {};
-    $http.get(Path.getUri("api/nodes-hierarchy/all-node-hierarchy")).success(
+    $http.get(Path.getUri("nodes-hierarchy/all-node-hierarchy")).success(
         function (data) {
             angular.forEach(data, function (item) {
                 nodeNameObj[item.id] = item.name;
@@ -40,7 +40,7 @@ angular.module("testCaseApp").filter("nodeName", function (nodeNameFactory) {
 // });
 
 angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http", "$timeout", "hrDialog", "nodeNameFactory", "hrProgress", function ($scope, $http, $timeout, hrDialog, nodeNameFactory, hrProgress) {
-    var baseUrl = Path.getUri("api/nodes-hierarchy");
+    var baseUrl = Path.getUri("nodes-hierarchy");
     $scope.photographUriHtml = Path.getUri("test/photograph.html?");
     var testCaseList;
     $scope.modalOption = {
@@ -78,7 +78,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
 
     $scope.searchTestCase = function () {
         if (selectNode) {
-            HrUtils.httpRequest($http, "api/nodes-hierarchy/node-hierarchy-id/" + selectNode.object.id,
+            HrUtils.httpRequest($http, "nodes-hierarchy/node-hierarchy-id/" + selectNode.object.id,
                 function (data, status) {
                     $scope.testCaseList = data.testCaseList;
                     testCaseList = $scope.testCaseList;
@@ -92,7 +92,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
     };
 
     $scope.clearTestResult = function () {
-        HrUtils.httpRequest($http, "api/test-case/test-result",
+        HrUtils.httpRequest($http, "test-case/test-result",
             function (data, status) {
                 $scope.searchTestCase();
             }, function (data, status) {
@@ -103,7 +103,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
 
     $scope.runTestCaseList = function () {
         hrProgress.open();
-        HrUtils.httpRequest($http, "api/test-case/test-code-list",
+        HrUtils.httpRequest($http, "test-case/test-code-list",
             function (data) {
                 hrProgress.close();
                 if (data == "0"){
@@ -243,13 +243,13 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
 
     $scope.saveNodesHierarchy = function () {
         if ($scope.modalTitle === "新增测试分组") {
-            HrUtils.httpRequest($http, "api/nodes-hierarchy", function (data, status) {
+            HrUtils.httpRequest($http, "nodes-hierarchy/add", function (data, status) {
                 hrDialog.dialog(hrDialog.typeEnum.SUCCESS, {message: "新增测试分组成功！"});
             }, function (data, status) {
                 HrUtils.httpError(data, status, hrDialog);
             }, hrDialog, "post", $scope.nodesHierarchy);
         } else if ($scope.modalTitle === "编辑测试分组") {
-            HrUtils.httpRequest($http, "api/nodes-hierarchy/id=" + $scope.nodesHierarchy.id, function (data, status) {
+            HrUtils.httpRequest($http, "nodes-hierarchy/id=" + $scope.nodesHierarchy.id, function (data, status) {
                 hrDialog.dialog(hrDialog.typeEnum.SUCCESS, {message: "编辑测试分组成功！"});
             }, function (data, status) {
                 HrUtils.httpError(data, status, hrDialog)
@@ -499,7 +499,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
             angular.forEach($scope.testCase.testCaseStepsList, function (item) {
                 item.testCaseStepsPk.testCaseId = $scope.testCase.testCaseId;
             });
-            HrUtils.httpRequest($http, "api/test-case", function (data, status) {
+            HrUtils.httpRequest($http, "test-case", function (data, status) {
                 hrDialog.dialog(hrDialog.typeEnum.SUCCESS, {message: "新增测试用例成功！"});
             }, function (data, status) {
                 HrUtils.httpError(data, status, hrDialog);
@@ -510,7 +510,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
             } else {
                 $scope.testCase.codePath = "com.heren.his." + $scope.selectPackage + "." + $scope.selectClass + "." + $scope.selectMethod;
             }
-            HrUtils.httpRequest($http, "api/test-case",
+            HrUtils.httpRequest($http, "test-case",
                 function (data, status) {
                     hrDialog.dialog(hrDialog.typeEnum.SUCCESS, {message: "修改测试用例成功！"});
                 }, function (data, status) {
@@ -532,7 +532,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
 
     var deleteTestCase = function (data) {
         console.log(data);
-        HrUtils.httpRequest($http, "api/test-case/" + data.testCaseId,
+        HrUtils.httpRequest($http, "test-case/" + data.testCaseId,
             function (data, status) {
                 hrDialog.dialog(hrDialog.typeEnum.SUCCESS, {message: "删除测试用例成功!"});
                 $scope.searchTestCase();
@@ -547,7 +547,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
 
     var runTestCase = function (item) {
         hrProgress.open();
-        HrUtils.httpRequest($http, "api/test-case/code-path",
+        HrUtils.httpRequest($http, "test-case/code-path",
             function (data, status) {
                 hrDialog.dialog(hrDialog.typeEnum.SUCCESS, {message: "测试用例执行成功！"});
                 $scope.searchTestCase();
@@ -560,7 +560,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
     };
 
     var searchPackage = function () {
-        HrUtils.httpRequest($http, "api/nodes-hierarchy/package-name/",
+        HrUtils.httpRequest($http, "nodes-hierarchy/package-name/",
             function (data, status) {
                 $scope.packageNameList = data;
                 console.log($scope.packageNameList)
@@ -583,7 +583,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
     $scope.$watch("selectPackage", function (newVal, oldVal) {
         console.log(newVal);
         if (newVal != "packageName") {
-            HrUtils.httpRequest($http, "api/nodes-hierarchy/class-name/" + $scope.selectPackage,
+            HrUtils.httpRequest($http, "nodes-hierarchy/class-name/" + $scope.selectPackage,
                 function (data, status) {
                     $scope.classNameList = data;
                 }, function (data, status) {
@@ -597,7 +597,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
     $scope.$watch("selectClass", function (newVal, oldVal) {
         console.log(newVal);
         if (newVal != "className" && newVal != "no") {
-            HrUtils.httpRequest($http, "api/nodes-hierarchy/method-name/com.heren.his." + $scope.selectPackage + "." + $scope.selectClass,
+            HrUtils.httpRequest($http, "nodes-hierarchy/method-name/com.heren.his." + $scope.selectPackage + "." + $scope.selectClass,
                 function (data, status) {
                     $scope.methodNameList = data;
                 }, function (data, status) {
@@ -609,7 +609,7 @@ angular.module("testCaseApp").controller('testCaseController', ["$scope", "$http
     }, true);
 
     var searchMethod = function (path) {
-        HrUtils.httpRequest($http, "api/nodes-hierarchy/method-name/" + path,
+        HrUtils.httpRequest($http, "nodes-hierarchy/method-name/" + path,
             function (data, status) {
 
             }, function (data, status) {

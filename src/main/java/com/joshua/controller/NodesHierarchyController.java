@@ -2,13 +2,15 @@ package com.joshua.controller;
 
 
 import com.joshua.entity.NodesHierarchy;
-import com.joshua.service.NodesHierarchyRepository;
+import com.joshua.repository.NodesHierarchyRepository;
+import com.joshua.service.NodesHierarchyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,29 +24,35 @@ public class NodesHierarchyController {
 
     private static Logger logger = LoggerFactory.getLogger(NodesHierarchyController.class);
 
-    @Autowired
     private NodesHierarchyRepository nodesHierarchyRepository;
+    private NodesHierarchyService nodesHierarchyService;
 
-    @PostMapping()
-    public String addNodesHierarchy(@RequestParam NodesHierarchy nodesHierarchy) {
+    @Autowired
+    public NodesHierarchyController(NodesHierarchyRepository nodesHierarchyRepository, NodesHierarchyService nodesHierarchyService) {
+        this.nodesHierarchyRepository = nodesHierarchyRepository;
+        this.nodesHierarchyService = nodesHierarchyService;
+    }
+
+    @PostMapping(path = "add")
+    public @ResponseBody String addNodesHierarchy(@RequestBody NodesHierarchy nodesHierarchy) {
         nodesHierarchyRepository.save(nodesHierarchy);
         return "success";
     }
 
     @PostMapping(path = "test-case")
-    public String updateTestCase(NodesHierarchy nodesHierarchy) {
+    public @ResponseBody String updateTestCase(NodesHierarchy nodesHierarchy) {
         nodesHierarchyRepository.save(nodesHierarchy);
         return "success";
     }
 
     @PostMapping(path = "{id")
-    public String updateNodesHierarchy(@RequestParam String id, @RequestParam NodesHierarchy nodesHierarchy) {
+    public @ResponseBody String updateNodesHierarchy(@RequestParam String id, @RequestParam NodesHierarchy nodesHierarchy) {
         nodesHierarchyRepository.save(nodesHierarchy);
         return "ok";
     }
 
     @GetMapping(path = "test-project/{inputCode}")
-    public Iterable<NodesHierarchy> getTestProject(@RequestParam String inputCode) {
+    public @ResponseBody Iterable<NodesHierarchy> getTestProject(@RequestParam String inputCode) {
 
         return nodesHierarchyRepository.findAll();
     }
@@ -63,30 +71,25 @@ public class NodesHierarchyController {
     }
 
     @GetMapping(path = "node-hierarchy-delete/{id}")
-    public String deleteNodeHierarchyById(@RequestParam Long id) {
+    public @ResponseBody String deleteNodeHierarchyById(@RequestParam Long id) {
         nodesHierarchyRepository.deleteById(id);
         return "ok";
     }
 
     @GetMapping(path = "node-hierarchy-id/{id}")
-    public Optional<NodesHierarchy> searchNodesHierarchiesById(@RequestParam long id) {
+    public @ResponseBody Optional<NodesHierarchy> searchNodesHierarchiesById(@RequestParam long id) {
         return nodesHierarchyRepository.findById(id);
     }
-//
-//    @GET
-//    @Path("package-name")
-//    @OnException("对应包名查找失败！")
-//    @GetMapping(path = "package-name")
-//    public List<String> getPackageList() {
-//        return nodesHierarchyFacade.getPackageList();
-//    }
-//
-//    @GET
-//    @Path("class-name/{package-name}")
-//    @OnException("对应类名查找失败！")
-//    public List<String> getClassList(@PathParam("package-name") String pathName) {
-//        return nodesHierarchyFacade.getClassList(pathName);
-//    }
+
+    @GetMapping(path = "/package-name")
+    public @ResponseBody List<String> getPackageList(){
+        return nodesHierarchyService.getPackageList();
+    }
+
+    @GetMapping(path = "class-name/{package-name}")
+    public @ResponseBody List<String> getClassList(@PathParam("package-name") String pathName) {
+        return nodesHierarchyService.getClassList(pathName);
+    }
 //
 //    @GET
 //    @Path("method-name/{class-name}")

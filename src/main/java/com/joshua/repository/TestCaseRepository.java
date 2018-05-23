@@ -1,4 +1,4 @@
-package com.joshua.service;
+package com.joshua.repository;
 
 import com.joshua.entity.NodesHierarchy;
 import com.joshua.entity.TestCase;
